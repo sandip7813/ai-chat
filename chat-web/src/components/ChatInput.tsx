@@ -5,12 +5,15 @@ type ChatInputProps = {
   onSend: (content: string) => void
 }
 
+const MAX_MESSAGE_LENGTH = 20
+
 function ChatInput({ placeholder = 'Type a message…', onSend }: ChatInputProps) {
   const [text, setText] = useState('')
   const isEmpty = text.trim() === ''
+  const isTooLong = text.trim().length > MAX_MESSAGE_LENGTH
 
   function sendMessage() {
-    if (isEmpty) {
+    if (isEmpty || isTooLong) {
       return
     }
 
@@ -33,9 +36,12 @@ function ChatInput({ placeholder = 'Type a message…', onSend }: ChatInputProps
         placeholder={placeholder}
         className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
       />
+
+      <span className={`self-center text-sm ${isTooLong ? 'text-red-600' : 'text-gray-500'}`}>{ text.length } / { MAX_MESSAGE_LENGTH }</span>
+
       <button
         type="submit"
-        disabled={isEmpty}
+        disabled={isEmpty || isTooLong}
         className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
         Send
