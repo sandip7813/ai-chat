@@ -33,23 +33,33 @@ function App() {
   }
 
   function handleClear() {
+    const isConfirmed = window.confirm('Clear all messages?')
+
+    if (!isConfirmed) {
+      return
+    }
+    
     setMessages([])
   }
+
+  const messageCount = messages.length
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-900">
       <Sidebar conversations={conversations} activeConversationId={1} />
 
       <main className="flex flex-1 flex-col">
-        <div className="flex items-center justify-end border-b border-gray-200 bg-white px-6 py-3">
+        <div className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-3">
           <button
             type="button"
             onClick={handleClear}
-            disabled={messages.length === 0}
-            className="text-sm text-gray-500 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={messageCount === 0}
+            className="rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Clear chat
           </button>
+
+          <span className="ml-2 self-center text-sm text-gray-500">{ messageCount } { messageCount === 1 ? 'message' : 'messages'}</span>
         </div>
 
         <MessageList messages={messages} />

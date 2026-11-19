@@ -6,14 +6,6 @@ type MessageListProps = {
 }
 
 function MessageList({ messages }: MessageListProps) {
-  // if (messages.length === 0) {
-  //   return (
-  //     <div className="flex flex-1 items-center justify-center text-gray-400">
-  //       Start a conversation
-  //     </div>
-  //   )
-  // }
-  
   return (
     <div className="flex-1 space-y-4 overflow-y-auto p-6">
       {
