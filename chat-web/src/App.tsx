@@ -38,7 +38,7 @@ function App() {
     if (!isConfirmed) {
       return
     }
-    
+
     setMessages([])
   }
 
@@ -59,7 +59,11 @@ function App() {
             Clear chat
           </button>
 
-          <span className="ml-2 self-center text-sm text-gray-500">{ messageCount } { messageCount === 1 ? 'message' : 'messages'}</span>
+          {messageCount > 0 && (
+            <span className="text-sm text-gray-500">
+                {messageCount} {messageCount === 1 ? 'message' : 'messages'}
+            </span>
+          )}
         </div>
 
         <MessageList messages={messages} />
