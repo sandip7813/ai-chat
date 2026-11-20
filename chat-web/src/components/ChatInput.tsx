@@ -3,19 +3,20 @@ import { useState } from 'react'
 type ChatInputProps = {
   placeholder?: string
   onSend: (content: string) => void
+  isDisabled?: boolean
 }
 
 const MAX_MESSAGE_LENGTH = 200
 const QUICK_REPLIES = ['Hello!', 'Explain simply', 'Give an example']
 
-function ChatInput({ placeholder = 'Type a message…', onSend }: ChatInputProps) {
+function ChatInput({ placeholder = 'Type a message…', onSend, isDisabled = false }: ChatInputProps) {
   const [text, setText] = useState('')
   const characterCount = text.trim().length
   const isEmpty = characterCount === 0
   const isTooLong = characterCount > MAX_MESSAGE_LENGTH
 
   function sendMessage() {
-    if (isEmpty || isTooLong) {
+    if (isEmpty || isTooLong || isDisabled) {
       return
     }
 
@@ -57,7 +58,7 @@ function ChatInput({ placeholder = 'Type a message…', onSend }: ChatInputProps
 
         <button
           type="submit"
-          disabled={isEmpty || isTooLong}
+          disabled={isEmpty || isTooLong || isDisabled}
           className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Send

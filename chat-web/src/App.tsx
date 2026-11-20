@@ -21,15 +21,28 @@ const initialMessages: Message[] = [
 
 function App() {
   const [messages, setMessages] = useState<Message[]>(initialMessages)
+  const [isThinking, setIsThinking] = useState(false)
 
   function handleSend(content: string) {
-    const newMessage: Message = {
+    const userMessage: Message = {
       id: Date.now(),
       role: 'user',
       content,
     }
 
-    setMessages([...messages, newMessage])
+    setMessages((previousMessages) => [...previousMessages, userMessage])
+    setIsThinking(true)
+
+    setTimeout(() => {
+      const assistantMessage: Message = {
+        id: Date.now(),
+        role: 'assistant',
+        content: `You said: "${content}". I'm a fake reply for now.`,
+      }
+
+      setMessages((previousMessages) => [...previousMessages, assistantMessage])
+      setIsThinking(false)
+    }, 1000)
   }
 
   function handleClear() {
@@ -66,8 +79,8 @@ function App() {
           )}
         </div>
 
-        <MessageList messages={messages} />
-        <ChatInput placeholder="Ask anything…" onSend={handleSend} />
+        <MessageList messages={messages} isThinking={isThinking} />
+        <ChatInput placeholder="Ask anything…" onSend={handleSend} isDisabled={isThinking} />
       </main>
     </div>
   )
