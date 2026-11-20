@@ -19,6 +19,24 @@ const initialMessages: Message[] = [
   },
 ]
 
+const RANDOM_REPLIES = [
+  'Hello! How can I help you today?',
+  'Sure, I can help you with that.',
+  'That\'s a great idea!',
+  'Let me explain that in simple terms.',
+  'Absolutely! Here is an example.',
+  'You are welcome! Happy to help.',
+  'I hope that makes things clearer.',
+  'Interesting question! Let me break it down.',
+  'Here are a few things you should consider.',
+  'No problem. Take your time!',
+  'That sounds like a good approach.',
+  'Great! Let\'s move to the next step.',
+  'Thanks for sharing that information.',
+  'I would recommend starting with the basics.',
+  'Glad I could help!'
+];
+
 function App() {
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [isThinking, setIsThinking] = useState(false)
@@ -33,16 +51,20 @@ function App() {
     setMessages((previousMessages) => [...previousMessages, userMessage])
     setIsThinking(true)
 
+    const randomIndex = Math.floor(Math.random() * RANDOM_REPLIES.length)
+    const randomDelay = (Math.random() * (5 - 0.5) + 0.5) * 1000;
+
     setTimeout(() => {
       const assistantMessage: Message = {
         id: Date.now(),
         role: 'assistant',
-        content: `You said: "${content}". I'm a fake reply for now.`,
+        content: RANDOM_REPLIES[randomIndex],
       }
 
       setMessages((previousMessages) => [...previousMessages, assistantMessage])
+      // setMessages([...messages, assistantMessage])
       setIsThinking(false)
-    }, 1000)
+    }, randomDelay)
   }
 
   function handleClear() {
@@ -66,7 +88,7 @@ function App() {
           <button
             type="button"
             onClick={handleClear}
-            disabled={messageCount === 0}
+            disabled={messageCount === 0 || isThinking}
             className="rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Clear chat
