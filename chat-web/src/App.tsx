@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import ChatInput from './components/ChatInput'
 import MessageList from './components/MessageList'
 import Sidebar from './components/Sidebar'
@@ -35,11 +35,12 @@ const RANDOM_REPLIES = [
   'Thanks for sharing that information.',
   'I would recommend starting with the basics.',
   'Glad I could help!'
-];
+]
 
 function App() {
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [isThinking, setIsThinking] = useState(false)
+  const replyTimerRef = useRef<number | null>(null)
 
   function handleSend(content: string) {
     const userMessage: Message = {
@@ -52,9 +53,9 @@ function App() {
     setIsThinking(true)
 
     const randomIndex = Math.floor(Math.random() * RANDOM_REPLIES.length)
-    const randomDelay = (Math.random() * (5 - 0.5) + 0.5) * 1000;
+    const randomDelay = (Math.random() * (5 - 0.5) + 0.5) * 1000
 
-    setTimeout(() => {
+    replyTimerRef.current = window.setTimeout(() => {
       const assistantMessage: Message = {
         id: Date.now(),
         role: 'assistant',
@@ -62,7 +63,6 @@ function App() {
       }
 
       setMessages((previousMessages) => [...previousMessages, assistantMessage])
-      // setMessages([...messages, assistantMessage])
       setIsThinking(false)
     }, randomDelay)
   }
@@ -74,7 +74,13 @@ function App() {
       return
     }
 
+    if (replyTimerRef.current !== null) {
+      window.clearTimeout(replyTimerRef.current)
+      replyTimerRef.current = null
+    }
+
     setMessages([])
+    setIsThinking(false)
   }
 
   const messageCount = messages.length
@@ -88,7 +94,7 @@ function App() {
           <button
             type="button"
             onClick={handleClear}
-            disabled={messageCount === 0 || isThinking}
+            disabled={messageCount === 0}
             className="rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Clear chat

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 type ChatInputProps = {
   placeholder?: string
@@ -11,6 +11,8 @@ const QUICK_REPLIES = ['Hello!', 'Explain simply', 'Give an example']
 
 function ChatInput({ placeholder = 'Type a message…', onSend, isDisabled = false }: ChatInputProps) {
   const [text, setText] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+
   const characterCount = text.trim().length
   const isEmpty = characterCount === 0
   const isTooLong = characterCount > MAX_MESSAGE_LENGTH
@@ -22,6 +24,13 @@ function ChatInput({ placeholder = 'Type a message…', onSend, isDisabled = fal
 
     onSend(text.trim())
     setText('')
+
+    inputRef.current?.focus()
+  }
+
+  function handleQuickReply(reply: string) {
+    setText(reply)
+    inputRef.current?.focus()
   }
 
   return (
@@ -31,7 +40,7 @@ function ChatInput({ placeholder = 'Type a message…', onSend, isDisabled = fal
           <button
             key={reply}
             type="button"
-            onClick={() => setText(reply)}
+            onClick={() => handleQuickReply(reply)}
             className="rounded-lg border border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 hover:bg-gray-100"
           >
             {reply}
@@ -48,13 +57,15 @@ function ChatInput({ placeholder = 'Type a message…', onSend, isDisabled = fal
       >
         <input
           type="text"
+          ref={inputRef}
           value={text}
+          autoFocus
           onChange={(event) => setText(event.target.value)}
           placeholder={placeholder}
           className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
         />
 
-        <span className={`self-center text-sm ${isTooLong ? 'text-red-600' : 'text-gray-500'}`}>{ characterCount } / { MAX_MESSAGE_LENGTH }</span>
+        <span className={`self-center text-sm ${isTooLong ? 'text-red-600' : 'text-gray-500'}`}>{characterCount} / { MAX_MESSAGE_LENGTH }</span>
 
         <button
           type="submit"

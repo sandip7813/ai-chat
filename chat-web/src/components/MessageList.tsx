@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import type { Message } from '../types'
 import MessageBubble from './MessageBubble'
 
@@ -7,6 +8,11 @@ type MessageListProps = {
 }
 
 function MessageList({ messages, isThinking }: MessageListProps) {
+  const bottomRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, isThinking])
+
   return (
     <div className="flex-1 space-y-4 overflow-y-auto p-6">
       {
@@ -23,6 +29,7 @@ function MessageList({ messages, isThinking }: MessageListProps) {
           <p className="animate-pulse rounded-2xl bg-white px-4 py-2 text-gray-400 shadow-sm">
             Thinking…
           </p>
+          <div ref={bottomRef} />
         </div>
       )}
 
