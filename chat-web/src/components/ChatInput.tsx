@@ -61,6 +61,11 @@ function ChatInput({ placeholder = 'Type a message…', onSend, isDisabled = fal
           value={text}
           autoFocus
           onChange={(event) => setText(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              setText('')
+            }
+          }}
           placeholder={placeholder}
           className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
         />

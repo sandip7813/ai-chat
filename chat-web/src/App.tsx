@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ChatInput from './components/ChatInput'
 import MessageList from './components/MessageList'
 import Sidebar from './components/Sidebar'
@@ -42,6 +42,20 @@ function App() {
   const [isThinking, setIsThinking] = useState(false)
   const replyTimerRef = useRef<number | null>(null)
 
+  const messageCount = messages.length
+
+  useEffect(() => {
+    document.title = messageCount > 0 ? `(${messageCount}) AI Chat` : 'AI Chat'
+  }, [messageCount])
+
+  useEffect(() => {
+    return () => {
+      if (replyTimerRef.current !== null) {
+        window.clearTimeout(replyTimerRef.current)
+      }
+    }
+  }, [])
+
   function handleSend(content: string) {
     const userMessage: Message = {
       id: Date.now(),
@@ -82,8 +96,6 @@ function App() {
     setMessages([])
     setIsThinking(false)
   }
-
-  const messageCount = messages.length
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-900">

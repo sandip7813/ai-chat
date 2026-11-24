@@ -9,8 +9,13 @@ type MessageListProps = {
 
 function MessageList({ messages, isThinking }: MessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null)
+  const hasScrolledRef = useRef(false)
+
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    bottomRef.current?.scrollIntoView({
+      behavior: hasScrolledRef.current ? 'smooth' : 'auto',
+    })
+    hasScrolledRef.current = true
   }, [messages, isThinking])
 
   return (
@@ -29,10 +34,10 @@ function MessageList({ messages, isThinking }: MessageListProps) {
           <p className="animate-pulse rounded-2xl bg-white px-4 py-2 text-gray-400 shadow-sm">
             Thinking…
           </p>
-          <div ref={bottomRef} />
         </div>
       )}
 
+      <div ref={bottomRef} />
     </div>
   )
 }
